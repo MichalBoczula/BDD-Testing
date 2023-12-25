@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BDD.API.Persistance.Migrations
 {
     [DbContext(typeof(BddContext))]
-    [Migration("20231225183533_AddedSeed")]
+    [Migration("20231225191032_AddedSeed")]
     partial class AddedSeed
     {
         /// <inheritdoc />
@@ -47,20 +47,20 @@ namespace BDD.API.Persistance.Migrations
                         new
                         {
                             Id = 1,
-                            Identifier = new Guid("94f3b7ce-4ec0-4349-9547-a8a1ed5b50fd"),
+                            Identifier = new Guid("ac11a00f-cdf0-4be4-b5b4-ddfbc7f2cb97"),
                             Name = "Order1"
                         },
                         new
                         {
                             Id = 2,
-                            Identifier = new Guid("de5ede98-bac1-4479-aea1-225ea0c675ee"),
+                            Identifier = new Guid("fd74bf90-59c6-40d6-a07c-5df3143a7c8e"),
                             Name = "Order2"
                         },
                         new
                         {
                             Id = 3,
-                            Identifier = new Guid("ea10b30a-b1c6-4dbd-92eb-d17d366ad3d9"),
-                            Name = "Order2"
+                            Identifier = new Guid("79ecceae-9c19-4f42-9bc7-be8ecc83f70a"),
+                            Name = "Order3"
                         });
                 });
 

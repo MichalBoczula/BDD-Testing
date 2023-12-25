@@ -18,9 +18,9 @@ namespace BDD.API.Persistance.Migrations
                 columns: new[] { "Id", "Identifier", "Name" },
                 values: new object[,]
                 {
-                    { 1, new Guid("94f3b7ce-4ec0-4349-9547-a8a1ed5b50fd"), "Order1" },
-                    { 2, new Guid("de5ede98-bac1-4479-aea1-225ea0c675ee"), "Order2" },
-                    { 3, new Guid("ea10b30a-b1c6-4dbd-92eb-d17d366ad3d9"), "Order2" }
+                    { 1, new Guid("ac11a00f-cdf0-4be4-b5b4-ddfbc7f2cb97"), "Order1" },
+                    { 2, new Guid("fd74bf90-59c6-40d6-a07c-5df3143a7c8e"), "Order2" },
+                    { 3, new Guid("79ecceae-9c19-4f42-9bc7-be8ecc83f70a"), "Order3" }
                 });
 
             migrationBuilder.InsertData(

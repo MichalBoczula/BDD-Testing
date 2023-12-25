@@ -31,7 +31,7 @@ namespace BDD.API.Persistance.Seed
                 {
                     Id = 3,
                     Identifier = Guid.NewGuid(),
-                    Name = "Order2",
+                    Name = "Order3",
                 });
         }
     }
