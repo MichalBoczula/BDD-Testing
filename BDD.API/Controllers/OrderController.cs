@@ -1,4 +1,6 @@
-﻿using BDD.API.Models;
+﻿using BDD.API.BusinessLayer.Abstract;
+using BDD.API.DataTransferObjects.Internal;
+using BDD.API.Models;
 using BDD.API.Persistance.Abstract;
 using BDD.API.Persistance.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -9,17 +11,17 @@ namespace BDD.API.Controllers
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly IOrdersRepository _ordersRepository;
+        private readonly IOrderManager _ordersManager;
 
-        public OrderController(IOrdersRepository ordersRepository)
+        public OrderController(IOrderManager ordersManager)
         {
-            this._ordersRepository = ordersRepository;
+            _ordersManager = ordersManager;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetOrders()
+        public async Task<ActionResult<List<OrderDto>>> GetOrders()
         {
-            var orders = await _ordersRepository.GetOrders();
+            var orders = await _ordersManager.GetOrders();
             return Ok(orders);
         }
     }

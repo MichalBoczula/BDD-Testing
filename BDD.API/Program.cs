@@ -1,3 +1,5 @@
+using BDD.API.BusinessLayer.DependencyInjection;
+using BDD.API.Mapping.DependencyInjection;
 using BDD.API.Persistance.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddPersistance(builder.Configuration);
+builder.Services.AddMapping();
+builder.Services.AddBusinessLayer();
 
 var app = builder.Build();
 
