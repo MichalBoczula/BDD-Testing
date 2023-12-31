@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BDD.API", "BDD.API\BDD.API.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BDD.AcceptanceTests", "BDD.AcceptanceTests\BDD.AcceptanceTests.csproj", "{5774C5C7-23B4-4F54-9468-47CB459F86BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BDD.Specs", "BDD.Specs\BDD.Specs.csproj", "{9137118A-9928-4966-AA23-2F61B5893143}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BDD.AcceptanceTests.SpecFlow", "BDD.AcceptanceTests.SpecFlow\BDD.AcceptanceTests.SpecFlow.csproj", "{10063103-0934-4DCC-9F4E-A70B64468182}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{5774C5C7-23B4-4F54-9468-47CB459F86BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5774C5C7-23B4-4F54-9468-47CB459F86BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5774C5C7-23B4-4F54-9468-47CB459F86BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9137118A-9928-4966-AA23-2F61B5893143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9137118A-9928-4966-AA23-2F61B5893143}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9137118A-9928-4966-AA23-2F61B5893143}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9137118A-9928-4966-AA23-2F61B5893143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10063103-0934-4DCC-9F4E-A70B64468182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10063103-0934-4DCC-9F4E-A70B64468182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10063103-0934-4DCC-9F4E-A70B64468182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10063103-0934-4DCC-9F4E-A70B64468182}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
