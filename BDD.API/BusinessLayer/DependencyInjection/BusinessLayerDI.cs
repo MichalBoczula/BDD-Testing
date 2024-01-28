@@ -1,5 +1,6 @@
 ﻿using BDD.API.BusinessLayer.Abstract;
 using BDD.API.BusinessLayer.Managers;
+using BDD.API.BusinessLayer.Validators;
 using System.Reflection;
 
 namespace BDD.API.BusinessLayer.DependencyInjection
@@ -11,6 +12,7 @@ namespace BDD.API.BusinessLayer.DependencyInjection
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddTransient<IOrderManager, OrderManager>();
             services.AddTransient<IProductsManager, ProductsManager>();
+            services.AddTransient<IProductsValidator, ProductsValidator>();
             return services;
         }
     }

@@ -10,12 +10,14 @@ namespace BDD.API.BusinessLayer.Managers
     public class ProductsManager : IProductsManager
     {
         private readonly IProductsRepository _productRepository;
+        private readonly IProductsValidator _productValidator;
         private readonly IMapper _mapper;
 
-        public ProductsManager(IProductsRepository productRepository, IMapper mapper)
+        public ProductsManager(IProductsRepository productRepository, IMapper mapper, IProductsValidator productValidator)
         {
             _productRepository = productRepository;
             _mapper = mapper;
+            _productValidator = productValidator;
         }
 
         public async Task<List<ProductDto>> GetProducts()
@@ -29,22 +31,38 @@ namespace BDD.API.BusinessLayer.Managers
         {
             var product = _mapper.Map<Product>(productExternal);
             var result = await _productRepository.AddProduct(product);
-            return result;
+            return product.Id;
         }
 
         public async Task<bool> DeleteProduct(int id)
         {
-
-
-            await _productRepository.DeleteProduct(null);
-            return true;
+            var result = await _productValidator.CheckIfProductExist(id);
+            if (result.IsExists && result.product != null)
+            {
+                await _productRepository.DeleteProduct(result.product);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public async Task<bool> UpdateProduct(int id, UpdateProductExternal productExternal)
         {
-            var product = _mapper.Map<Product>(productExternal);
-            await _productRepository.UpdateProduct(product);
-            return true;
+            var result = await _productValidator.CheckIfProductExist(id);
+            if (result.IsExists && result.product != null)
+            {
+                result.product.Price = productExternal.Price;
+                result.product.Name = productExternal.Name;
+
+                await _productRepository.UpdateProduct(result.product);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

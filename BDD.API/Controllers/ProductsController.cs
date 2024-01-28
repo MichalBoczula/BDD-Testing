@@ -32,15 +32,15 @@ namespace BDD.API.Controllers
             return Ok(products);
         }
 
-        [HttpPut("/{id}")]
-        public async Task<ActionResult<List<ProductDto>>> UpdateProduct([FromQuery] int id, [FromBody] UpdateProductExternal product)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<ProductDto>>> UpdateProduct([FromRoute] int id, [FromBody] UpdateProductExternal product)
         {
             var products = await _productsManager.UpdateProduct(id, product);
             return Ok(products);
         }
 
-        [HttpDelete("/{id}")]
-        public async Task<ActionResult<List<ProductDto>>> DeleteProduct([FromQuery] int id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<ProductDto>>> DeleteProduct([FromRoute] int id)
         {
             var products = await _productsManager.DeleteProduct(id);
             return Ok(products);
