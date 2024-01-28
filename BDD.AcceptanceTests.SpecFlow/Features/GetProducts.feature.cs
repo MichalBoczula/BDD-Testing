@@ -84,9 +84,9 @@ namespace BDD.AcceptanceTests.SpecFlow.Features
         [Xunit.TraitAttribute("FeatureTitle", "GetProducts")]
         [Xunit.TraitAttribute("Description", "Get list of projects")]
         [Xunit.TraitAttribute("Category", "GetProducts")]
-        [Xunit.InlineDataAttribute("1", "Project One", "100", new string[0])]
-        [Xunit.InlineDataAttribute("2", "Project Two", "150", new string[0])]
-        [Xunit.InlineDataAttribute("3", "Another Project", "0", new string[0])]
+        [Xunit.InlineDataAttribute("1", "Product One", "100", new string[0])]
+        [Xunit.InlineDataAttribute("2", "Product Two", "150", new string[0])]
+        [Xunit.InlineDataAttribute("3", "Product Three", "220", new string[0])]
         public virtual void GetListOfProjects(string id, string name, string price, string[] exampleTags)
         {
             string[] @__tags = new string[] {
@@ -122,16 +122,16 @@ namespace BDD.AcceptanceTests.SpecFlow.Features
             {
                 this.ScenarioStart();
 #line 5
-        testRunner.Given("the project API is available", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+        testRunner.Given("the product API is available", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 6
-        testRunner.When("the client requests the list of projects", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("the client requests the list of products", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 7
-        testRunner.Then("the API should return a list of projects", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("the API should return a list of products", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 8
-        testRunner.And("each project should have properties id, name, and price", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("each products should have properties id, name, and price", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();

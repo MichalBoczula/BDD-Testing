@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataTransferObjects\External\" />
     <Folder Include="Persistance\Migrations\" />
   </ItemGroup>
 

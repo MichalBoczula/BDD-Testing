@@ -9,13 +9,13 @@ namespace BDD.AcceptanceTests.SpecFlow.StepDefinitions
     {
         List<Product> products;
 
-        [Given(@"the project API is available")]
+        [Given(@"the product API is available")]
         public void GivenTheProjectAPIIsAvailable()
         {
             //throw new PendingStepException();
         }
 
-        [When(@"the client requests the list of projects")]
+        [When(@"the client requests the list of products")]
         public void WhenTheClientRequestsTheListOfProjects()
         {
             products = new List<Product>()
@@ -26,18 +26,17 @@ namespace BDD.AcceptanceTests.SpecFlow.StepDefinitions
             };
         }
 
-        [Then(@"the API should return a list of projects")]
+        [Then(@"the API should return a list of products")]
         public void ThenTheAPIShouldReturnAListOfProjects()
         {
             products.Should().HaveCount(3);
         }
 
-        [Then(@"each project should have properties id, name, and price")]
+        [Then(@"each products should have properties id, name, and price")]
         public void ThenEachProjectShouldHavePropertiesIdNameAndPrice()
         {
             products.ForEach(x =>
-            {
-                x.Id.Should().NotBe(0);
+            {    x.Id.Should().NotBe(0);
                 x.Id.Should().NotBe(null);
 
                 x.Name.Should().NotBeNullOrWhiteSpace();
