@@ -1,5 +1,8 @@
 ﻿Feature: GetProducts
-  
+    As a user,
+    I want to retrieve a products lists,
+    So that I can view its details.
+
  @GetProducts
   Scenario: Get list of projects
         Given the product API is available

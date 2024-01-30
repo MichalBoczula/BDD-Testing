@@ -1,0 +1,8 @@
+﻿
+-run this with project name
+
+livingdoc test-assembly <Project name>.dll -t TestExecution.json
+
+- our project name BDD.AcceptanceTests.SpecFlow
+
+livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json

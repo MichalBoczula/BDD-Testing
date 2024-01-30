@@ -40,7 +40,8 @@ namespace BDD.AcceptanceTests.SpecFlow.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "GetProducts", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "GetProducts", "    As a user,\r\n    I want to retrieve a products lists,\r\n    So that I can view " +
+                    "its details.", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -101,7 +102,7 @@ namespace BDD.AcceptanceTests.SpecFlow.Features
             argumentsOfScenario.Add("name", name);
             argumentsOfScenario.Add("price", price);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Get list of projects", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 4
+#line 7
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -121,16 +122,16 @@ namespace BDD.AcceptanceTests.SpecFlow.Features
             else
             {
                 this.ScenarioStart();
-#line 5
+#line 8
         testRunner.Given("the product API is available", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 6
+#line 9
         testRunner.When("the client requests the list of products", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 7
+#line 10
         testRunner.Then("the API should return a list of products", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 8
+#line 11
         testRunner.And("each products should have properties id, name, and price", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
