@@ -1,4 +1,4 @@
-name: .NET
+name: .NET CI with SpecFlow LivingDoc
 
 on:
   push:
@@ -7,24 +7,29 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-
+  build-and-doc:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.x  # Ensure this matches your project's .NET version
+        dotnet-version: 7.0.x  # Match this with your project's .NET version
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --no-restore
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
     - name: Install LivingDoc CLI
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+
     - name: Generate Living Documentation
       run: |
         cd BDD-Tests/BDD/BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
