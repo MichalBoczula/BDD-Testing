@@ -12,7 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # Ensures the entire history is available for the push
+        fetch-depth: 0
+        token: ${{ secrets.MY_GITHUB_TOKEN }}  # Use the PAT for checkout
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
@@ -31,4 +32,4 @@ jobs:
         git config --global user.email 'actions@github.com'
         git add -f BDD.AcceptanceTests.SpecFlow/bin/
         git commit -m "Add bin folder"
-        git push
+        git push --set-upstream origin master --force
