@@ -43,8 +43,3 @@ jobs:
       run: |
         cd BDD-Tests/BDD/BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
         livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json
-
-    # Additional debugging: If the above cd fails, this will list the contents of the parent directory
-    - name: Debug: Fallback list contents if cd fails
-      run: ls -lR BDD-Tests/BDD/BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0 || ls -lR BDD-Tests/BDD/BDD.AcceptanceTests.SpecFlow/bin/
-      if: failure()
