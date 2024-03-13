@@ -1,4 +1,4 @@
-name: .NET CI with SpecFlow LivingDoc
+name: .NET CI with SpecFlow LivingDoc and Debugging
 
 on:
   push:
@@ -24,13 +24,27 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
+    - name: Debug: List contents after build
+      run: ls -lR
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
+    - name: Debug: List contents after test
+      run: ls -lR
+
     - name: Install LivingDoc CLI
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+
+    - name: Debug: List contents before LivingDoc generation
+      run: ls -lR
 
     - name: Generate Living Documentation
       run: |
         cd BDD-Tests/BDD/BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
         livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json
+
+    # Additional debugging: If the above cd fails, this will list the contents of the parent directory
+    - name: Debug: Fallback list contents if cd fails
+      run: ls -lR BDD-Tests/BDD/BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0 || ls -lR BDD-Tests/BDD/BDD.AcceptanceTests.SpecFlow/bin/
+      if: failure()
