@@ -1,0 +1,36 @@
+name: Generate SpecFlow Living Documentation
+
+on:
+  push:
+    branches:
+      - Documentation
+  workflow_dispatch:
+
+jobs:
+  generate-living-doc:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: 'Documentation'
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '7.0.x'  # Adjust based on your project's .NET version
+
+    - name: Install LivingDoc CLI
+      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+
+    - name: Generate Living Documentation
+      run: |
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -o livingdoc.html
+
+    - name: Commit and Push Documentation
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add livingdoc.html
+        git commit -m "Update Living Documentation"
+        git push origin Documentation
