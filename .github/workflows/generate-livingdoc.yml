@@ -29,12 +29,14 @@ jobs:
         livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -o livingdoc.html
 
     - name: Check for changes
-      id: git-check
+      id: files_changed
       run: |
-        git diff --exit-code || echo "Changes detected" && echo "::set-output name=changes_detected::true"
+        if git diff --name-only | grep -qv 'livingdoc.html'; then
+          echo "::set-output name=changes_detected::true"
+        fi
 
     - name: Commit and Push Documentation
-      if: steps.git-check.outputs.changes_detected == 'true'
+      if: steps.files_changed.outputs.changes_detected == 'true'
       run: |
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
