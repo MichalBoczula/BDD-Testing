@@ -1,4 +1,4 @@
-name: Generate and Commit bin Folder
+name: Generate, Commit, and Deploy Documentation
 
 on:
   push:
@@ -6,19 +6,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-commit-bin:
+  build-and-deploy-docs:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        token: ${{ secrets.MY_GITHUB_TOKEN }}  # Use the PAT for checkout
+        token: ${{ secrets.MY_GITHUB_TOKEN }}
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '7.0.x'  # Specify the .NET version used in your project
+        dotnet-version: '7.0.x'
 
     - name: Restore dependencies
       run: dotnet restore BDD.AcceptanceTests.SpecFlow/BDD.AcceptanceTests.SpecFlow.csproj
@@ -26,10 +26,15 @@ jobs:
     - name: Build
       run: dotnet build --no-restore BDD.AcceptanceTests.SpecFlow/BDD.AcceptanceTests.SpecFlow.csproj
 
-    - name: Commit bin folder
+    - name: Generate SpecFlow Living Documentation
       run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        git add -f BDD.AcceptanceTests.SpecFlow/bin/
-        git commit -m "Add bin folder"
-        git push --set-upstream origin master --force
+        dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o livingdoc.html
+
+    - name: Commit and Push Documentation to Documentation Branch
+      run: |
+        git checkout -b documentation || git checkout documentation
+        git pull origin documentation || true
+        git add livingdoc.html
+        git commit -m "Update Living Documentation"
+        git push origin documentation
