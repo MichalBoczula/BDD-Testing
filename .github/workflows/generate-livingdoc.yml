@@ -14,6 +14,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         ref: 'Documentation'
+        token: ${{ secrets.MY_GITHUB_TOKEN }}  # Use the PAT for checkout
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
@@ -33,4 +34,4 @@ jobs:
         git config --global user.email 'actions@github.com'
         git add livingdoc.html
         git commit -m "Update Living Documentation"
-        git push origin Documentation
+        git -c http.extraHeader="AUTHORIZATION: bearer ${{ secrets.MY_GITHUB_TOKEN }}" push origin Documentation
