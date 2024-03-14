@@ -19,20 +19,25 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '7.0.x'  # Adjust based on your project's .NET version
 
     - name: Install LivingDoc CLI
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
     - name: Generate Living Documentation
       run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -o livingdoc.html
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -o LivingDoc.html
 
     - name: Check for changes
       id: files_changed
       run: |
-        if git diff --name-only | grep -qv 'livingdoc.html'; then
+        git diff --name-only | grep -v 'LivingDoc.html' > changes.txt
+        if [ -s changes.txt ]; then
+          echo "Changes in other files detected."
           echo "::set-output name=changes_detected::true"
+        else
+          echo "No changes in other files."
+          echo "::set-output name=changes_detected::false"
         fi
 
     - name: Commit and Push Documentation
@@ -40,6 +45,6 @@ jobs:
       run: |
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
-        git add livingdoc.html
+        git add LivingDoc.html
         git commit -m "Update Living Documentation"
         git -c http.extraHeader="AUTHORIZATION: bearer ${{ secrets.MY_GITHUB_TOKEN }}" push origin Documentation
