@@ -37,8 +37,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Copy LivingDoc.html from master branch
-      run: git checkout master -- LivingDoc.html
+    - name: Copy LivingDoc.html from bin folder
+      run: cp BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/LivingDoc.html LivingDoc.html
 
     - name: Commit and push LivingDoc.html to LivingDoc branch
       run: |
