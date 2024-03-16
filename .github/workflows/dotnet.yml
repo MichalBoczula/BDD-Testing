@@ -34,4 +34,6 @@ jobs:
       run: cd BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
 
     - name: Generate SpecFlow LivingDoc
-      run: livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
+      run: |
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
+        cd ../../../../  # Return to the root directory
