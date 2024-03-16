@@ -366,3 +366,4 @@ FodyWeavers.xsd
 **/bin/
 **/obj/
 !BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json
+!BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll
