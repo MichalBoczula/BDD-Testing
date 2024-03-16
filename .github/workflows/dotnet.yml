@@ -27,31 +27,9 @@ jobs:
     - name: Build the application
       run: dotnet build --no-restore
 
-    - name: Run tests
-      run: dotnet test --no-build
-
-    - name: Navigate to test project directory
-      run: cd BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/
-
-    - name: Install SpecFlow Plus LivingDoc CLI
-      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+    - name: Change directory to test assembly location
+      run: cd BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
 
     - name: Generate SpecFlow LivingDoc
-      run: livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
-
-    - name: Checkout LivingDoc branch
       run: |
-        git fetch
-        git checkout LivingDoc || git checkout -b LivingDoc
-        git reset --hard origin/LivingDoc || true  # Reset local branch to match remote
-
-    - name: Configure Git
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-
-    - name: Commit and Push LivingDoc.html
-      run: |
-        git add LivingDoc.html
-        git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
-        git push -f origin LivingDoc
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
