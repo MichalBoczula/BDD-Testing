@@ -39,6 +39,9 @@ jobs:
     - name: Checkout LivingDoc branch
       run: git checkout -b LivingDoc || git checkout LivingDoc
 
+    - name: Pull changes from LivingDoc branch
+      run: git pull origin LivingDoc || true
+
     - name: Configure Git
       run: |
         git config user.name "GitHub Actions"
