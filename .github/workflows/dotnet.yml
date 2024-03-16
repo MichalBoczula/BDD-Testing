@@ -2,12 +2,11 @@ name: CI/CD with SpecFlow LivingDoc
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
-  build-test-generate-doc:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,14 +26,23 @@ jobs:
     - name: Build the application
       run: dotnet build --no-restore
 
-    - name: Install SpecFlow Plus LivingDoc CLI
-      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+    - name: Run tests
+      run: dotnet test --no-build
 
-    - name: Change directory to test assembly location
-      run: cd BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
+  generate-and-push-livingdoc:
+    runs-on: ubuntu-latest
+    needs: build-and-test
 
-    - name: List contents to verify directory
-      run: ls
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Generate SpecFlow LivingDoc
-      run: livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
+    - name: Copy LivingDoc.html from master branch
+      run: git checkout master -- LivingDoc.html
+
+    - name: Commit and push LivingDoc.html to LivingDoc branch
+      run: |
+        git checkout -b LivingDoc || git checkout LivingDoc
+        git add LivingDoc.html
+        git commit -m "Update SpecFlow Living Documentation"
+        git push -f origin LivingDoc
