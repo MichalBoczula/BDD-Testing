@@ -1,48 +1,20 @@
-name: CI/CD with SpecFlow LivingDoc
+generate-and-push-livingdoc:
+  runs-on: ubuntu-latest
+  needs: build-and-test
 
-on:
-  push:
-    branches:
-      - master
+  steps:
+  - name: Checkout code
+    uses: actions/checkout@v2
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  - name: Copy LivingDoc.html from bin folder
+    run: cp BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/LivingDoc.html LivingDoc.html
 
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.MY_GITHUB_TOKEN }}
-        fetch-depth: 0  
+  - name: Configure Git
+    run: git config --global http.extraHeader "AUTHORIZATION: bearer ${{ secrets.MY_GITHUB_TOKEN }}"
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '7.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Build the application
-      run: dotnet build --no-restore
-
-    - name: Run tests
-      run: dotnet test --no-build
-
-  generate-and-push-livingdoc:
-    runs-on: ubuntu-latest
-    needs: build-and-test
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Copy LivingDoc.html from bin folder
-      run: cp BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/LivingDoc.html LivingDoc.html
-
-    - name: Commit and push LivingDoc.html to LivingDoc branch
-      run: |
-        git checkout -b LivingDoc || git checkout LivingDoc
-        git add LivingDoc.html
-        git commit -m "Update SpecFlow Living Documentation"
-        git push -f origin LivingDoc
+  - name: Commit and push LivingDoc.html to LivingDoc branch
+    run: |
+      git checkout -b LivingDoc || git checkout LivingDoc
+      git add LivingDoc.html
+      git commit -m "Update SpecFlow Living Documentation"
+      git push -f origin LivingDoc
