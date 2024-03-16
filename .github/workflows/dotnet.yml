@@ -27,6 +27,9 @@ jobs:
     - name: Build the application
       run: dotnet build --no-restore
 
+    - name: Install SpecFlow Plus LivingDoc CLI
+      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+
     - name: Change directory to test assembly location
       run: cd BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
 
