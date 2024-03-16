@@ -14,11 +14,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         token: ${{ secrets.MY_GITHUB_TOKEN }}
+        fetch-depth: 0  
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '7.0.x'  # Adjust to match your project's .NET version
+        dotnet-version: '7.0.x'
 
     - name: Restore dependencies
       run: dotnet restore
@@ -26,28 +27,30 @@ jobs:
     - name: Build the application
       run: dotnet build --no-restore
 
-    # Since TestExecution.json is being maintained in the repository, no need to generate it again here
+    - name: Run tests
+      run: dotnet test --no-build
 
     - name: Install SpecFlow Plus LivingDoc CLI
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
-    - name: Generate SpecFlow LivingDoc with test results
+    - name: Generate SpecFlow LivingDoc
       run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -o LivingDoc.html
 
     - name: Checkout LivingDoc branch
       run: |
         git fetch
         git checkout LivingDoc || git checkout -b LivingDoc
-        git reset --hard origin/LivingDoc || true
+        git reset --hard origin/LivingDoc || true  # Reset local branch to match remote
 
     - name: Configure Git
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Commit and Push LivingDoc.html to the LivingDoc branch
+    - name: Commit and Push LivingDoc.html
       run: |
         git add LivingDoc.html
         git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
         git push -f origin LivingDoc
+      
