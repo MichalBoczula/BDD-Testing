@@ -1,44 +1,51 @@
-name: Update bin Folder in Documentation Branch
+name: CI/CD with SpecFlow LivingDoc
 
 on:
   push:
     branches: [ master ]
-  workflow_dispatch:
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  update-bin-folder:
+  build-test-generate-doc:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0
-        token: ${{ secrets.MY_GITHUB_TOKEN }}  # Use the PAT for checkout
+        token: ${{ secrets.MY_GITHUB_TOKEN }}
 
-    - name: Setup .NET
+    - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '7.0.x'  # Specify the .NET version used in your project
+        dotnet-version: '7.0.x'  # Adjust to match your project's .NET version
 
     - name: Restore dependencies
-      run: dotnet restore BDD.AcceptanceTests.SpecFlow/BDD.AcceptanceTests.SpecFlow.csproj
+      run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore BDD.AcceptanceTests.SpecFlow/BDD.AcceptanceTests.SpecFlow.csproj
+    - name: Build the application
+      run: dotnet build --no-restore
 
-    - name: Checkout Documentation branch
-      run: git checkout -b Documentation || git checkout Documentation
+    - name: Run tests
+      run: dotnet test --no-build
 
-    - name: Remove old bin content
-      run: rm -rf bin/ || true
+    - name: Install SpecFlow Plus LivingDoc CLI
+      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
-    - name: Copy new bin folder
-      run: cp -r BDD.AcceptanceTests.SpecFlow/bin .
-
-    - name: Commit changes
+    - name: Generate SpecFlow LivingDoc
       run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        git add -f bin/
-        git commit -m "Update bin folder from BDD.AcceptanceTests.SpecFlow"
-        git push --set-upstream origin Documentation --force
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -o LivingDoc.html
+
+    - name: Checkout LivingDoc branch
+      run: git checkout -b LivingDoc || git checkout LivingDoc
+
+    - name: Configure Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Commit and Push LivingDoc.html
+      run: |
+        git add LivingDoc.html
+        git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
+        git -c http.extraHeader="AUTHORIZATION: bearer ${{ secrets.MY_GITHUB_TOKEN }}" push origin LivingDoc
