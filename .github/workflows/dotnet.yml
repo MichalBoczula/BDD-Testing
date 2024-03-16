@@ -1,4 +1,4 @@
-name: CI/CD with SpecFlow LivingDoc and Test Results
+name: CI/CD with SpecFlow LivingDoc
 
 on:
   push:
@@ -26,29 +26,28 @@ jobs:
     - name: Build the application
       run: dotnet build --no-restore
 
-    - name: Run tests and generate TRX
-      run: dotnet test --logger "trx;LogFileName=TestResults.trx"
+    # Since TestExecution.json is being maintained in the repository, no need to generate it again here
 
     - name: Install SpecFlow Plus LivingDoc CLI
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
     - name: Generate SpecFlow LivingDoc with test results
       run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll --test-results TestResults.trx -o LivingDoc.html
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
 
-    - name: Checkout GitHub Pages branch
+    - name: Checkout LivingDoc branch
       run: |
         git fetch
-        git checkout gh-pages || git checkout -b gh-pages
-        git reset --hard origin/gh-pages || true
+        git checkout LivingDoc || git checkout -b LivingDoc
+        git reset --hard origin/LivingDoc || true
 
     - name: Configure Git
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Commit and Push LivingDoc.html to GitHub Pages
+    - name: Commit and Push LivingDoc.html to the LivingDoc branch
       run: |
         git add LivingDoc.html
         git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
-        git push -f origin gh-pages
+        git push -f origin LivingDoc
