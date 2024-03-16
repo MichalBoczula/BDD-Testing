@@ -33,7 +33,8 @@ jobs:
     - name: Change directory to test assembly location
       run: cd BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0
 
+    - name: List contents to verify directory
+      run: ls
+
     - name: Generate SpecFlow LivingDoc
-      run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
-        cd ../../../../  # Return to the root directory
+      run: livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
