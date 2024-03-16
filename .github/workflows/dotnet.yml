@@ -35,7 +35,7 @@ jobs:
 
     - name: Generate SpecFlow LivingDoc
       run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t TestExecution.json -o LivingDoc.html
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
 
     - name: Checkout LivingDoc branch
       run: |
@@ -48,11 +48,8 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Pull latest changes from LivingDoc branch
-      run: git pull origin LivingDoc --rebase
-
     - name: Commit and Push LivingDoc.html
       run: |
         git add LivingDoc.html
-        git commit -m "Update SpecFlow Living Documentation"
+        git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
         git push -f origin LivingDoc
