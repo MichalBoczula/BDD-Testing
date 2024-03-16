@@ -363,4 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Exception for TestExecution.json
+**/bin/
+**/obj/
 !BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json
