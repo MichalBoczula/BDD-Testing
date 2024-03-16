@@ -1,4 +1,4 @@
-name: Build SpecFlow Test Project
+name: CI/CD with SpecFlow LivingDoc and Test Results
 
 on:
   push:
@@ -7,19 +7,50 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-test-generate-doc:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MY_GITHUB_TOKEN }}
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '7.0.x'  # Adjust to match your project's .NET version
 
-    - name: Restore dependencies for the test project
-      run: dotnet restore BDD.AcceptanceTests.SpecFlow/BDD.AcceptanceTests.SpecFlow.csproj
+    - name: Restore dependencies
+      run: dotnet restore
 
-    - name: Build the test project
-      run: dotnet build BDD.AcceptanceTests.SpecFlow/BDD.AcceptanceTests.SpecFlow.csproj --no-restore
+    - name: Build the application
+      run: dotnet build --no-restore
+
+    - name: Run tests and generate TestExecution.json
+      run: |
+        dotnet test --logger "trx;LogFileName=TestResults.trx"
+        dotnet test --logger "json;LogFileName=TestResults/TestExecution.json"
+
+    - name: Install SpecFlow Plus LivingDoc CLI
+      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+
+    - name: Generate SpecFlow LivingDoc with test results
+      run: |
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t TestResults/TestExecution.json -o LivingDoc.html
+
+    - name: Checkout GitHub Pages branch
+      run: |
+        git fetch
+        git checkout gh-pages || git checkout -b gh-pages
+        git reset --hard origin/gh-pages || true
+
+    - name: Configure Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Commit and Push LivingDoc.html to GitHub Pages
+      run: |
+        git add LivingDoc.html
+        git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
+        git push -f origin gh-pages
