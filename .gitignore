@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Exception for TestExecution.json
+!bin/Debug/net7.0/TestExecution.json
