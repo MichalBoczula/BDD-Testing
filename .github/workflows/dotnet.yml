@@ -7,79 +7,45 @@ on:
     branches: [ master ]
 
 jobs:
-  setup-and-build:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '7.0.x'
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build the application
-        run: dotnet build --no-restore
-
-  test:
-    needs: setup-and-build
+  build-test-generate-doc:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MY_GITHUB_TOKEN }}
+        fetch-depth: 0
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '7.0.x'
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '7.0.x'
 
-      - name: Run tests
-        run: dotnet test --no-build
+    - name: Restore dependencies
+      run: dotnet restore
 
-  generate-and-push-doc:
-    needs: test
-    runs-on: ubuntu-latest
+    - name: Build the application
+      run: dotnet build --no-restore
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
-          fetch-depth: 0
+    - name: Run tests
+      run: dotnet test --no-build
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '7.0.x'
+    - name: Install SpecFlow Plus LivingDoc CLI
+      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
-      - name: Install SpecFlow Plus LivingDoc CLI
-        run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+    - name: Generate SpecFlow LivingDoc
+      run: |
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
 
-      - name: Generate SpecFlow LivingDoc
-        run: |
-          livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
+    - name: Configure Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
 
-      - name: Configure Git
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-
-      - name: Checkout LivingDoc branch
-        run: git checkout -B LivingDoc
-
-      - name: Commit LivingDoc.html
-        run: |
-          git add LivingDoc.html
-          git commit -m "Update SpecFlow Living Documentation"
-
-      - name: Force Push LivingDoc.html to LivingDoc branch
-        run: git push -f origin LivingDoc
+    - name: Prepare LivingDoc branch
+      run: |
+        git checkout --orphan temp-branch
+        git add LivingDoc.html
+        git commit -m "Update SpecFlow Living Documentation"
+        git branch -M temp-branch LivingDoc
+        git push -f origin LivingDoc
