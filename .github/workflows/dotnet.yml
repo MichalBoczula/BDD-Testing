@@ -34,22 +34,14 @@ jobs:
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
     - name: Generate SpecFlow LivingDoc
-      run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
+      run: livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
 
-    - name: Checkout LivingDoc branch
-      run: |
-        git fetch
-        git checkout LivingDoc || git checkout -b LivingDoc
-        git reset --hard origin/LivingDoc || true  
-
-    - name: Configure Git
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-
-    - name: Commit and Push LivingDoc.html
-      run: |
-        git add LivingDoc.html
-        git commit -m "Update SpecFlow Living Documentation"
-        git push -f origin LivingDoc
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        branch: LivingDoc  # The branch the action should deploy to.
+        folder: .  # The folder the action should deploy.
+        clean: true  # Automatically remove files that aren't in the deployment folder.
+        single-commit: true  # Keeps the deployment history at a single commit.
+        commit-message: "Update SpecFlow Living Documentation"
+        target-folder: 'LivingDoc.html'  # Deploying specific file
