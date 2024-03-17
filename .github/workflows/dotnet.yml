@@ -7,10 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build-and-test:
+  build-test-generate-doc:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
     steps:
     - uses: actions/checkout@v2
@@ -32,37 +30,12 @@ jobs:
     - name: Run tests
       run: dotnet test --no-build
 
-  generate-doc:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.MY_GITHUB_TOKEN }}
-        fetch-depth: 0
-
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '7.0.x'
-
     - name: Install SpecFlow Plus LivingDoc CLI
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
     - name: Generate SpecFlow LivingDoc
       run: |
         livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
-
-  update-gh-pages:
-    needs: generate-doc
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.MY_GITHUB_TOKEN }}
-        fetch-depth: 0
 
     - name: Configure Git
       run: |
@@ -71,8 +44,9 @@ jobs:
 
     - name: Prepare LivingDoc branch
       run: |
-        git checkout --orphan temp-branch
+        git checkout --orphan LivingDoc
+        git rm -rf .
+        git clean -fdx
         git add LivingDoc.html
         git commit -m "Update SpecFlow Living Documentation"
-        git branch -M temp-branch LivingDoc
         git push -f origin LivingDoc
