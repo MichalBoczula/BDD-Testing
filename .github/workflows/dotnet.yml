@@ -45,8 +45,7 @@ jobs:
     - name: Prepare LivingDoc branch
       run: |
         git checkout --orphan LivingDoc
-        git rm -rf .
-        git clean -fdx
+        git reset
         git add LivingDoc.html
         git commit -m "Update SpecFlow Living Documentation"
         git push -f origin LivingDoc
