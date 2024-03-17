@@ -35,7 +35,7 @@ jobs:
 
     - name: Generate SpecFlow LivingDoc
       run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll  -o LivingDoc.html
 
     - name: Checkout LivingDoc branch
       run: |
