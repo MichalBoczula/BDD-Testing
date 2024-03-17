@@ -51,6 +51,6 @@ jobs:
     - name: Commit and Push LivingDoc.html
       run: |
         git add LivingDoc.html
-        git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
+        git commit -m "Update SpecFlow Living Documentation"
         git push -f origin LivingDoc
       
