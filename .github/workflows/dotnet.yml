@@ -34,18 +34,23 @@ jobs:
       run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
     - name: Generate SpecFlow LivingDoc
-      run: |
-        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
+      run: livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
 
-    - name: Configure Git
+    - name: Clone repository in a new directory
       run: |
+        git clone https://${{ secrets.MY_GITHUB_TOKEN }}@github.com/${{ github.repository }} ../repo-temp
+
+    - name: Configure Git and commit the documentation
+      run: |
+        cd ../repo-temp
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-
-    - name: Prepare LivingDoc branch
-      run: |
-        git checkout --orphan temp-branch
+        git checkout --orphan new-branch
+        mv ../${{ github.workspace }}/LivingDoc.html .
         git add LivingDoc.html
         git commit -m "Update SpecFlow Living Documentation"
-        git branch -M temp-branch LivingDoc
-        git push -f origin LivingDoc
+
+    - name: Force push to LivingDoc branch
+      run: |
+        cd ../repo-temp
+        git push -f origin HEAD:LivingDoc
