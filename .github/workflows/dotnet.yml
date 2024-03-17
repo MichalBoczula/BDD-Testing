@@ -2,19 +2,19 @@ name: CI/CD with SpecFlow LivingDoc
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
-  build-and-test:
+  build-test-generate-doc:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MY_GITHUB_TOKEN }}
+        fetch-depth: 0  
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
@@ -30,23 +30,27 @@ jobs:
     - name: Run tests
       run: dotnet test --no-build
 
-  generate-and-push-livingdoc:
-    runs-on: ubuntu-latest
-    needs: build-and-test
+    - name: Install SpecFlow Plus LivingDoc CLI
+      run: dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Generate SpecFlow LivingDoc
+      run: |
+        livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -o LivingDoc.html
 
-    - name: Copy LivingDoc.html from bin folder
-      run: cp BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/LivingDoc.html LivingDoc.html
+    - name: Checkout LivingDoc branch
+      run: |
+        git fetch
+        git checkout LivingDoc || git checkout -b LivingDoc
+        git reset --hard origin/LivingDoc || true  # Reset local branch to match remote
 
     - name: Configure Git
-      run: git config --global http.extraHeader "AUTHORIZATION: bearer ${{ secrets.MY_GITHUB_TOKEN }}"
-
-    - name: Commit and push LivingDoc.html to LivingDoc branch
       run: |
-        git checkout -b LivingDoc || git checkout LivingDoc
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Commit and Push LivingDoc.html
+      run: |
         git add LivingDoc.html
-        git commit -m "Update SpecFlow Living Documentation"
+        git commit -m "Update SpecFlow Living Documentation" || echo "No changes to commit"
         git push -f origin LivingDoc
+      
