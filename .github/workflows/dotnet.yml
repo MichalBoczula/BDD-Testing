@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         token: ${{ secrets.MY_GITHUB_TOKEN }}
-        fetch-depth: 0  
+        fetch-depth: 0
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
@@ -37,20 +37,14 @@ jobs:
       run: |
         livingdoc test-assembly BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/BDD.AcceptanceTests.SpecFlow.dll -t BDD.AcceptanceTests.SpecFlow/bin/Debug/net7.0/TestExecution.json -o LivingDoc.html
 
-    - name: Checkout LivingDoc branch
-      run: |
-        git fetch
-        git checkout LivingDoc || git checkout -b LivingDoc
-        git reset --hard origin/LivingDoc || true  # Reset local branch to match remote
-
     - name: Configure Git
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Commit and Push LivingDoc.html
+    - name: Commit and Push LivingDoc.html to LivingDoc branch
       run: |
+        git checkout -B LivingDoc  # Creates or switches to the LivingDoc branch
         git add LivingDoc.html
         git commit -m "Update SpecFlow Living Documentation"
-        git push -f origin LivingDoc
-      
+        git push -u origin LivingDoc
