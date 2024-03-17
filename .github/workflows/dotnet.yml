@@ -42,9 +42,13 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Commit and Push LivingDoc.html to LivingDoc branch
+    - name: Checkout LivingDoc branch
+      run: git checkout -B LivingDoc  
+
+    - name: Commit LivingDoc.html
       run: |
-        git checkout -B LivingDoc  # Creates or switches to the LivingDoc branch
         git add LivingDoc.html
         git commit -m "Update SpecFlow Living Documentation"
-        git push -u origin LivingDoc
+
+    - name: Force Push LivingDoc.html to LivingDoc branch
+      run: git push -f origin LivingDoc
